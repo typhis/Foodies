@@ -1,0 +1,174 @@
+user
+{
+	password: String;
+	information :
+	{
+		name : String;
+		location : int[2];
+		phone : string
+		tags: String[];
+	}
+	moments[] :
+	{
+		picture: link;
+		text: String;
+	}
+	reservation&coupons[] :
+	{
+		name : String;
+		location: int[2];
+		phone : String;
+		reservation :
+		{
+			seats : int;
+			reservation date : String;
+			command :
+				{
+					dish[]
+						{
+								dish name: String;
+								dish type: sTring;
+								dish picture : String;
+								price: unsigned int;
+						}
+					menu[]
+						{
+						dish[]
+							{
+									dish name: String;
+									dish type: sTring;
+									dish picture : String;
+									price: unsigned int;
+							}
+							price: unsigned int
+						}
+				}
+
+		}
+
+		owned-coupons[]
+		{
+			dish[]
+				{
+					dish name: String;
+					dish type: String;
+					dish picture : String;
+					price: unsigned int;
+				}
+			menu[]
+				{
+					dish[]
+					{
+						dish name: String;
+						dish type: sTring;
+						dish picture : String;
+						price: unsigned int;
+					}
+					price: unsigned int
+				}			
+			reduction: unsigned int
+			deadline: String
+		}
+	}
+
+	friends[] :
+	{
+		name: String;
+		phone: String;
+	}
+}
+
+restaurant
+{	
+	log info
+	{
+		email: String;
+		password : String;
+	}
+	information :
+	{
+		name String
+		location int[2]
+		phone String
+		tags String[]
+	}
+
+	reservation[] :
+		{
+			seats: int;
+			reservation date: String;
+			command :
+				{
+					dish[]
+						{
+							dish name: String;
+							dish type : String;
+							dish picture: String;
+							price : unsigned int;
+						}
+					menu[] 
+						{
+							dish
+							{
+								dish name : String;
+								dish type : String;
+								dish picture : String;
+								price : unsigned int;
+							}
+						price : unsigned int
+						}
+				}
+		}
+
+	coupons[]:
+	{
+		dish[]
+		{
+			dish name: String;
+			dish type: String;
+			dish picture : String;
+			price: unsigned int;
+		}
+		menu[]
+		{
+			dish[]
+			{
+				dish name: String;
+				dish type: sTring;
+				dish picture : String;
+				price: unsigned int;
+			}
+			price: unsigned int
+		}			
+		reduction: unsigned int
+		deadline: String
+	}
+
+	commentary&rate[]:
+	{
+		date String
+		username String
+		text String
+		rate int
+	}
+
+	dish[]
+	{
+		dish name String
+		dish type String
+		dish picture String
+		price unsigned int
+	}
+
+	menu[] 
+	{
+		dish[]
+		{
+			dish name String
+			dish type String
+			dish picture String
+			price unsinged int
+		}
+	price unsigned int 
+	}
+}
