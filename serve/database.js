@@ -51,7 +51,7 @@ var friendsSchema =new mongoose.Schema({
 });
 
 var userSchema = new mongoose.Schema({
-	password : {type : String, match : /[a-zA-Z0-9-_]+$/, min : 6, max : 40},
+	var password : {type : String, match : /[a-zA-Z0-9-_]+$/, min : 6, max : 40},
 	information : infoSchema,
 	moments : [momentsSchema],
 	reservationCoupons : {[
