@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var infoSchema =new mongoose.Schema({
+var infoSchema = new mongoose.Schema({
 	name : {type :String, match : /[a-zA-Z0-9-_]+$/},
 	location : {type : String, match : /[a-zA-Z]+$/},
 	phone : {type :String, match : /[0-9]+$/, min : 11, max : 11},
@@ -64,6 +64,7 @@ var reservationCouponsSchema = new mongoose.Schema({
 var userSchema = new mongoose.Schema({
 	loginname : {type : String, match : /[a-zA-Z0-9-_]+$/, min : 6},//this name for log in
 	password : {type : String, match : /[a-zA-Z0-9-_]+$/, min : 6, max : 40},
+	//token : {type : String, match : /[]+$/},
 	information : infoSchema,
 	moments : [momentsSchema],
 	reservationCoupons : [reservationCouponsSchema],	

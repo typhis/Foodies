@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var session = require('express-session');
+var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var config = require('./config'); // get our config file
 
 var routes = require('./routes/index');
 //var users = require('./routes/users');
@@ -17,7 +19,7 @@ var resadddish = require('./routes/restaurant');
 var app = express();
 
 //connect to DB
-mongoose.connect('mongodb://127.0.0.1', function(err) {
+mongoose.connect(config.database, function(err) { // connect to database
     if (err)
   console.log('connection error ', err);
     else
@@ -34,6 +36,8 @@ app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
+
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
