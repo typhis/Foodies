@@ -1,0 +1,42 @@
+<html>
+<head>
+	 <title>Login page</title>
+</head>
+<body>
+	<h1> <%= title %></h>
+	<form  action="/login/user_login/"  method="post">
+		<table border="0">
+			<tr>
+				<td><label >your login name</label>
+				</td>
+				<td><input type="text" name="loginname" id="loginname"></td>
+			</tr>
+			<tr>
+				<td><label >password</label>
+				</td>
+				<td><input type="password" name="password"  id="password"></td>
+			</tr>
+			<tr>
+				<td> <button type="submit">confirm</button> </td>
+				<td> <button type="submit">cancel</button> </td>
+			</tr>
+		</table>
+	</form>
+
+	<form  action="/login/restaurant_login/"  method="post">
+		<table border="0">
+			<tr>
+				<td><label >your license</label>
+				</td>
+				<td><input type="text" name="license" id="license"></td>
+			</tr>
+			<tr>
+				<td><label >password</label>
+				</td>
+				<td><input type="password" name="password"  id="password"></td>
+			</tr>
+			<tr>
+				<td> <button type="submit">confirm</button> </td>
+				<td> <button type="submit">cancel</button> </td>
+</body>
+</html>

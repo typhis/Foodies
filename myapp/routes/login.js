@@ -6,9 +6,6 @@ var urlencodedParser = bodyParser.urlencoded({
 	extended: false
 });
 var session = require('express-session');
-
-var path = require('path');
-
 var models = require('../models/database.js');
 
 var user_model = models.userModel;
@@ -40,7 +37,7 @@ router.post('/user_login', urlencodedParser, function(req, res) {
 	});
 });
 
-router.post('/restuarant_login', urlencodedParser, function(req, res) {
+router.post('/restaurant_login', urlencodedParser, function(req, res) {
 	restaurant_model.findOne({
 		license: req.body.license
 	}, function(err, restaurant) {

@@ -1,0 +1,70 @@
+<html>
+<head>
+	 <title>Add information for restaurant </title>
+</head>
+<body>
+	<h1> <%= title %></h>
+	<form  action="/restaurant/res_add_info/"  method="post">
+		<table border="0">
+			<tr>
+				<td><label >your actual name</label>
+				</td>
+				<td><input type="text" name="name" id="name"></td>
+			</tr>
+			<tr>
+				<td><label >Your restaurant's  location</label>
+				</td>
+				<td><input type="text" name="location" id="location"></td>
+			</tr>
+			<tr>
+				<td><label >phone</label>
+				</td>
+				<td><input type="phone" name="phone"  id="phone"></td>
+			</tr>
+			<tr>
+				<td><label >your restaurant  tags</label>
+				</td>
+				<td><input type="text" name="tags" id="tags"></td>
+			</tr>
+			<tr>
+				<td> <button type="submit">confirm</button> </td>
+				<td> <button type="submit">cancel</button> </td>
+			</tr>
+		</table>
+	</form>
+	<form action="/restaurant/res_remove_info/">
+		<button type="submit">delete my information</button>
+	</form>
+	<form  action="/restaurant/res_add_dish/"  method="post">
+		<table border="0">
+			<tr>
+				<td><label >This dish name</label>
+				</td>
+				<td><input type="text" name="dishname" id="dishname"></td>
+			</tr>
+			<tr>
+				<td><label >This dish's type</label>
+				</td>
+				<td><input type="text" name="dishtype" id="dishtype"></td>
+			</tr>
+			<tr>
+				<td><label >This dish's picture</label>
+				</td>
+				<td><input type="text" name="dishpicture"  id="dishpicture"></td>
+			</tr>
+			<tr>
+				<td><label >This dish's price</label>
+				</td>
+				<td><input type="text" name="price" id="price"></td>
+			</tr>
+			<tr>
+				<td> <button type="submit">confirm</button> </td>
+				<td> <button type="submit">cancel</button> </td>
+			</tr>
+		</table>
+	</form>
+	<form action="/restaurant/res_remove_dish/">
+		<button type="submit">delete my information</button>
+	</form>
+</body>
+</html>

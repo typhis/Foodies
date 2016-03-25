@@ -1,0 +1,53 @@
+<html>
+<head>
+	 <title>Register page</title>
+</head>
+<body>
+	<h1> <%= title %></h>
+	<form  action="/register/user_register/"  method="post">
+		<table border="0">
+			<tr>
+				<td><label >Your name for login</label>
+				</td>
+				<td><input type="text" name="loginname" id="loginname"></td>
+			</tr>
+			<tr>
+				<td><label >Password</label>
+				</td>
+				<td><input type="password" name="password"  id="password"></td>
+			</tr>
+			<tr>
+				<td><label >Repeated password</label>
+				</td>
+				<td><input type="password" name="re_password"  id="re_password"></td>
+			</tr>
+			<tr>
+				<td> <button type="submit">Sign in</button> </td>
+			</tr>
+		</table>
+	</form>
+	
+	<form  action="/register/restaurant_register/"  method="post">
+		<table border="0">
+			<tr>
+				<td><label >Your liciense</label>
+				</td>
+				<td><input type="text" name="license" id="license"></td>
+			</tr>
+			<tr>
+				<td><label >Password</label>
+				</td>
+				<td><input type="password" name="password"  id="password"></td>
+			</tr>
+			<tr>
+				<td><label >Repeated password</label>
+				</td>
+				<td><input type="password" name="re_password"  id="re_password"></td>
+			</tr>
+			<tr>
+				<td> <button type="submit">Sign in</button> </td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
