@@ -13,7 +13,8 @@ var user_model = models.userModel;
 var restaurant_model = models.restaurantModel;
 
 router.get('/', function(req, res) {
-	res.send("register");
+	console.log('resquest resister successfully');
+	res.send('register');
 });
 
 router.post('/user_register', urlencodedParser, function(req, res) {
@@ -25,7 +26,7 @@ router.post('/user_register', urlencodedParser, function(req, res) {
 				throw err;
 			} else {
 				if (user) {
-					res.send("Please try another phone number, this number has already register, you can log in");
+					res.send('Please try another phone number, this number has already register, you can log in');
 				} else {
 					var new_user = new user_model({
 						phone: req.body.phoneNumber,
@@ -35,11 +36,11 @@ router.post('/user_register', urlencodedParser, function(req, res) {
 						if (err) {
 							throw err;
 						}
-						res.send(new_user.phone + "welcome");
+						res.send(new_user.phone + 'welcome');
 					});
 				}
 			}
-		});
+		})
 	} else {
 		res.send("Please confirme the twice password");
 	}
@@ -54,13 +55,13 @@ router.post('/restaurant_register', urlencodedParser, function(req, res) {
 				res.send(err);
 			} else {
 				if (user) {
-					res.send("Please try another number of license, this license has registered already");
+					res.send('Please try another number of license, this license has registered already');
 				} else {
 					var encryptedPassword = encrypt.cryptPassword(req.body.password, function(err, salt) {
 						if (err) {
 							throw err;
 						}
-						console.log("encrypt password");
+						console.log('encrypt password');
 					});
 					var new_restaurant = new restaurant_model({
 						license: req.body.license,
@@ -71,14 +72,15 @@ router.post('/restaurant_register', urlencodedParser, function(req, res) {
 						if (err) {
 							throw err;
 						}
-						res.send(new_restaurant.license + " Welcome new restaurant!");
+						console.log('New restaurant has add');
+						res.send(new_restaurant.license + ' Welcome new restaurant!');
 					});
 				}
 			}
 		});
+	} else {
+		res.send("Please confirme the twice password");
 	}
-} else {
-	res.send("Please confirme the twice password");
 });
 
 module.exports = router;
