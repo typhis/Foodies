@@ -5,7 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var session = require('express-session');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 
@@ -13,8 +12,9 @@ var routes = require('./routes/index');
 //var users = require('./routes/users');
 var register = require('./routes/register');
 var login = require('./routes/login');
+var logout = require('./routes/logout');
 var restaurant = require('./routes/restaurant');
-var resadddish = require('./routes/restaurant');
+var manage = require('./routes/manage.js');//manage.js for conveniently testing
 
 var app = express();
 
@@ -35,7 +35,7 @@ app.set('view engine', 'ejs');
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended : true}));
+app.use(bodyParser.urlencoded({extended : false}));
 
 
 app.use(cookieParser());
@@ -45,8 +45,9 @@ app.use('/', routes);
 //app.use('/users', users);
 app.use('/register', register);
 app.use('/login', login);
+app.use('/logout', logout);
 app.use('/restaurant', restaurant);
-app.use('/resadddish', resadddish);
+app.use('/manage', manage);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -68,21 +69,6 @@ if (app.get('env') === 'development') {
     });
   });
 }
-//configuration
-
-app.set(function() {
-  
-  // Allow parsing cookies from request headers
-  this.use(express.cookieParser());
-  // Session management
-  this.use(express.session({
-    // Private crypting key
-    "secret": "blablabla",
-    // Internal session data storage engine, this is the default engine embedded with connect.
-    "store":  new express.session.MemoryStore({ reapInterval: 60000 * 10 })
-  }));
-});
-
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
