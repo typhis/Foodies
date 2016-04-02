@@ -7,7 +7,6 @@ var urlencodedParser = bodyParser.urlencoded({
 	extended: false
 });
 var jwt = require('jsonwebtoken');
-var session = require('express-session');
 
 var models = require('../models/database.js');
 var encrypt = require('../models/encrypt.js');
@@ -17,9 +16,7 @@ var restaurant_model = models.restaurantModel;
 
 router.get('/', function(req, res) {
 	console.log('resquest login successfully');
-	res.render('login', {
-		title: 'Log in'
-	});
+	res.send('login');
 });
 
 router.post('/user_login', urlencodedParser, function(req, res) {
@@ -30,13 +27,25 @@ router.post('/user_login', urlencodedParser, function(req, res) {
 			res.send("Log in error");
 		} else if (!user) {
 			res.send('Login failure: The name is not registered');
-			console.log(" not find user");
-		} else if (user.password != req.body.password) {
-			res.send('Login failure: Incorrect password');
-		} else if (user.password == req.body.password) {
-
-			res.redirect('http://localhost:3000');
-			console.log(" successed");
+		} else if (user) {
+			if (user.password != req.body.password) {
+				res.send('Login failure: Incorrect password');
+			} else if (user.password == req.body.password) {
+				//sign with default (HMAC SHA256)
+				var token = jwt.sign(user, 'superSecret', {
+					expiresInMinnutes: 2
+				});
+				user_model.findByIdAndUpdate(user._id, {
+					$set: {
+						token: token
+					}
+				}, function(err, user) {
+					if (err) {
+						throw err;
+					}
+				});
+				res.send("Welcome " + user.license + '  token' + token);
+			}
 		}
 	});
 });
@@ -56,7 +65,11 @@ router.post('/restaurant_login', urlencodedParser, function(req, res) {
 				var token = jwt.sign(restaurant, 'superSecret', {
 					expiresInMinnutes: 2
 				});
-				restaurant_model.findByIdAndUpdate(restaurant._id, {$set : {token : token}}, function(err, restaurant){
+				restaurant_model.findByIdAndUpdate(restaurant._id, {
+					$set: {
+						token: token
+					}
+				}, function(err, restaurant) {
 					if (err) {
 						throw err;
 					}
