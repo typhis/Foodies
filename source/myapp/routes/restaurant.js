@@ -11,7 +11,6 @@ var restaurant_model = models.restaurantModel;
 var info_model = models.infoModel;
 var dish_model = models.dishModel;
 
-/* GET restaurants listing. */
 router.get('/', function(req, res) {
 	var token = req.body.token || req.query.token || req.headers['x-access-token'];
 	if (token) {
@@ -193,6 +192,4 @@ router.post('/remove_dish', urlencodedParser, function(req, res) {
 		res.send('Token is empty');
 	}
 });
-
-
 module.exports = router;
