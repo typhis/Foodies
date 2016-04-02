@@ -5,145 +5,194 @@ var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({
 	extended: false
 });
-var session = require('express-session');
 var models = require('../models/database.js');
 
 var restaurant_model = models.restaurantModel;
 var info_model = models.infoModel;
 var dish_model = models.dishModel;
-  
-restaurant_model.findOne({
-	restaurantame: 'Elodie'
-}, function(err, restaurant) {
-	session.restaurant = restaurant;
-});
 
 /* GET restaurants listing. */
 router.get('/', function(req, res) {
-	res.render('restaurant', {
-		title: 'restaurant add information'
-	});
+	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+	if (token) {
+		restaurant_model.findOne({
+			token: token
+		}, function(err, restaurant) {
+			if (err) {
+				throw err;
+			} else if (restaurant) {
+				res.json(restaurant);
+			}
+		});
+	}else{
+		res.send('This token is empty');
+	}
 });
 
-//======= Add restaurant =======//
-router.post('/res_add_info', urlencodedParser, function(req, res) {
-	if (session.restaurant != null) {
-		var my_info = new info_model({
-			name: req.body.name,
-			location: req.body.location,
-			phone: req.body.phone,
-			tags: req.body.tags
-		});
-		my_info.save(function(err) {
+router.post('/add_info', urlencodedParser, function(req, res) {
+	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+	if (token) {
+		restaurant_model.findOne({
+			token: token
+		}, function(err, restaurant) {
 			if (err) {
+				throw err;
+			} else if (restaurant) {
+				var my_info = new info_model({
+					name: req.body.name,
+					location: req.body.location,
+					tags: req.body.tags
+				});
+				my_info.save(function(err) {
+					if (err) {
+						throw err;
+					}
+				});
+				restaurant_model.findByIdAndUpdate(
+					restaurant._id, {
+						$set: {
+							information: my_info
+						}
+					},
+					function(err, restaurant) {
+						if (err) {
+							console.log(err);
+						}
+						console.log("name : " + restaurant.information.name);
+						res.json({
+							name: restaurant.information.name,
+							location: restaurant.information.location,
+							tags: restaurant.information.tags
+						});
+					});
+			}
+		});
+	} else {
+		res.send("The token is empty");
+	}
+});
+
+router.get('/get_info', function(req, res) {
+	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+	if (token) {
+		restaurant_model.findOne({
+			token: token
+		}, function(err, restaurant) {
+			if (restaurant) {
+				res.json(restaurant.information);
+			}
+		});
+	} else {
+		res.send('Token is empty');
+	}
+});
+
+router.post('/add_dish', function(req, res) {
+	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+	if (token) {
+		restaurant_model.findOne({
+			token: token
+		}, function(err, restaurant) {
+			if (restaurant) {
+				var dishs = restaurant.dish;
+				var sign = false;
+				for (var i = dishs.length - 1; i >= 0; i--) {
+					if (dishs[i].dishname == req.body.dishname) {
+						sign = true;
+						console.log(sign + req.body.dishname);
+					}
+				}
+				if (sign) {
+					res.send('This dish has already exist');
+				} else {
+					my_dish = new dish_model({
+						dishname: req.body.dishname,
+						dishtype: req.body.dishtype,
+						dishpicture: req.body.dishpicture,
+						price: req.body.price
+					});
+					my_dish.save(function(err) {
+						if (err) {
+							throw err;
+						}
+					});
+					restaurant_model.findByIdAndUpdate(
+						restaurant._id, {
+							$push: {
+								dish: my_dish
+							}
+						},
+						function(err, restaurant) {
+							if (err) {
+								throw err;
+							}
+							res.json(restaurant.dish);
+						});
+				}
+			} else {
+				throw err;
+			}
+
+		});
+	} else {
+		res.send('Token is empty');
+	}
+});
+
+router.get('/get_dishs', function(req, res) {
+	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+	if (token) {
+		restaurant_model.findOne({
+			token: token
+		}, function(err, restaurant) {
+			if (restaurant) {
+				res.json(restaurant.dish);
+			} else {
+				res.json({
+					message: 'Please log in',
+					err: err
+				});
+			}
+		});
+	} else {
+		res.send('This token is empty');
+	}
+});
+
+router.post('/remove_dish', urlencodedParser, function(req, res) {
+	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+	if (token) {
+		restaurant_model.findOne({
+			token: token
+		}, function(err, restaurant) {
+			if (restaurant) {
+				dish_model.remove({
+					_id: req.body.id
+				}, function(err) {
+					if (err) {
+						throw err;
+					}
+				});
+				restaurant_model.findByIdAndUpdate(restaurant._id, {
+					$pull: {
+						"dish": {
+							_id: req.body.id
+						}
+					}
+				}, function(err, restaurant) {
+					if (err) {
+						throw err;
+					}
+					res.json(restaurant.dish);
+				});
+			} else {
 				throw err;
 			}
 		});
-		restaurant_model.findByIdAndUpdate(
-			session.restaurant._id, {
-				$set: {
-					"information": my_info
-				}
-			},
-			function(err, model) {
-				if (err) {
-					console.log(err);
-				}
-				console.log("name : " + session.restaurant.information.name);
-			});
-		res.send("My information was added!");
 	} else {
-		res.send("Please log in");
+		res.send('Token is empty');
 	}
 });
 
-router.get('/res_get_myinfo', urlencodedParser, function(req, res){
-	if (session.restaurant) {
-		
-	}
-})
-
-//I think the restaurant's information is necessary, so I detele this function
-// router.post('res_remove_info', urlencodedParser, function(req, res) {
-// 	if (!session.restaurant) {
-// 		var remove_info = session.restaurant._id(id).remove();
-// 		session.restaurant.save(function(err) {
-// 			if (err) {
-// 				return handleError(err);
-// 			}
-// 			console.log("The restaurant's information was remove");
-// 		});
-// 		res.send('Information had been removed')
-// 	} else {
-// 		res.send("Please log in");
-// 	}
-// });
-
-router.post('/res_add_dish', function(req, res) {
-	if (session.restaurant != null) {
-		my_dish = new dish_model({
-			dishname: req.body.dishname,
-			dishtype: req.body.dishtype,
-			dishpicture: req.body.dishpicture,
-			price: req.body.price
-		});
-		my_dish.save(function(err) {
-			if (err) {
-				throw err;
-			}
-		});
-
-		restaurant_model.findByIdAndUpdate(
-			session.restaurant._id, {
-				$push: {
-					"dish": my_dish
-				}
-			},
-			function(err, model) {
-				console.log(err);
-			});
-		res.send("Dish had was added!");
-	} else {
-		res.send("Please log in");
-	}
-});
-
-router.post('/res_remove_dish', urlencodedParser, function(req, res) {
-	if (session.restaurant != null) {
-		var idToRemove = req.body.dishID;
-		dish_model.remove({
-			_id: idToRemove
-		}, function(err) {
-			if (err) {
-				return handleError(err);
-			}
-		});
-		restaurant_model.findByIdAndUpdate(session.restaurant._id, {
-			$pull: {
-				"dish": {
-					_id: idToRemove
-				}
-			}
-		}, function(err, model) {
-			console.log(err);
-		});
-		res.send('Dish had been removed');
-	} else {
-		res.send("Please log in");
-	}
-});
-
-var dishs;
-router.get('/res_get_dishs', function(req, res) {
-	if (session.restaurant != null) {
-		dishs = session.restaurant.dish;
-		for (var i = dishs.length - 1; i >= 0; i--) {
-			console.log('dish : ' + dishs[i] + "is " + dishs[i].dishname);
-		}
-		res.send('restaurant');
-	} else {
-		res.send("Please log in");
-	}
-});
 
 module.exports = router;
