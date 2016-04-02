@@ -1,3 +1,4 @@
+//manage.js for conveniently testing
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
@@ -23,6 +24,26 @@ router.get('/get_all_restaurant', function(req, res) {
 			throw err;
 		}
 		res.json(restaurants);
+	});
+});
+
+router.get('/get_all_user', function(req, res) {
+	user_model.find(function(err, users) {
+		if (err) {
+			throw err;
+		}
+		res.json(users);
+	});
+});
+
+router.post('/delete_user', urlencodedParser, function(req, res) {
+	restaurant_model.remove(function(err, user) {
+		if (err) {
+			throw err;
+		}
+		restaurant_model.findById(req.body.id, function(err, user){
+			res.send('req.body.id = ' + req.body.id + '  successfully delete');
+		});
 	});
 });
 
