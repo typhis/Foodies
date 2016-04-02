@@ -15,8 +15,7 @@ var user_model = models.userModel;
 var restaurant_model = models.restaurantModel;
 
 router.get('/', function(req, res) {
-	console.log('resquest login successfully');
-	res.send('login');
+	res.send('login page');
 });
 
 router.post('/user_login', urlencodedParser, function(req, res) {
