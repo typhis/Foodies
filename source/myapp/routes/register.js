@@ -13,8 +13,7 @@ var user_model = models.userModel;
 var restaurant_model = models.restaurantModel;
 
 router.get('/', function(req, res) {
-	console.log('resquest resister successfully');
-	res.send('register');
+	res.send("register");
 });
 
 router.post('/user_register', urlencodedParser, function(req, res) {
