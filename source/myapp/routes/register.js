@@ -18,68 +18,69 @@ router.get('/', function(req, res) {
 });
 
 router.post('/user_register', urlencodedParser, function(req, res) {
-	console.log('Starting register' + 'loginname : ' + req.body.loginname +
-		'     password : ' + req.body.password);
-	user_model.findOne({
-		loginname: req.body.loginname
-	}, function(err, user) {
-		if (err) {
-			res.send(err);
-		} else if (user != null) {
-			res.send('Please try another name, this name has exist already');
-		} else {
-			if (req.body.password != req.body.re_password) {
-				res.send('Please confirme the password');
-			}
-			var new_user = new user_model({
-				loginname: req.body.loginname,
-				password: req.body.password
-			});
-			new_user.save(function(err) {
-				if (err) {
-					throw err;
+	if (req.body.password == req.body.re_password) {
+		user_model.findOne({
+			phone: req.body.phoneNumber
+		}, function(err, user) {
+			if (err) {
+				throw err;
+			} else {
+				if (user) {
+					res.send('Please try another phone number, this number has already register, you can log in');
+				} else {
+					var new_user = new user_model({
+						phone: req.body.phoneNumber,
+						password: req.body.password
+					});
+					new_user.save(function(err) {
+						if (err) {
+							throw err;
+						}
+						res.send(new_user.phone + 'welcome');
+					});
 				}
-				console.log('New user has add');
-				res.send(req.body.loginname + 'welcome');
-			});
-		}
-	});
+			}
+		})
+	} else {
+		res.send("Please confirme the twice password");
+	}
 });
 
 router.post('/restaurant_register', urlencodedParser, function(req, res) {
-	console.log('Starting register' + 'license number : ' + req.query.license +
-		'     password : ' + req.query.password +
-		'     phone : ' + req.query.phoneNumber);
-	restaurant_model.findOne({
-		license: req.body.license
-	}, function(err, restaurant) {
-		if (err) {
-			res.send(err);
-		} else if (restaurant != null) {
-			res.send('Please try another number of license, this license has registered already');
-		} else {
-			if (req.body.password != req.body.re_password) {
-				res.send('Please confirme the password');
+	if (req.body.password == req.body.re_password) {
+		restaurant_model.findOne({
+			license: req.body.license
+		}, function(err, restaurant) {
+			if (err) {
+				res.send(err);
+			} else {
+				if (user) {
+					res.send('Please try another number of license, this license has registered already');
+				} else {
+					var encryptedPassword = encrypt.cryptPassword(req.body.password, function(err, salt) {
+						if (err) {
+							throw err;
+						}
+						console.log('encrypt password');
+					});
+					var new_restaurant = new restaurant_model({
+						license: req.body.license,
+						phone: req.body.phoneNumber,
+						password: req.body.password
+					});
+					new_restaurant.save(function(err) {
+						if (err) {
+							throw err;
+						}
+						console.log('New restaurant has add');
+						res.send(new_restaurant.license + ' Welcome new restaurant!');
+					});
+				}
 			}
-			var encryptedPassword = encrypt.cryptPassword(req.body.password, function(err, salt) {
-				if (err) {
-					throw err;
-				}
-				console.log('encrypt password');
-			});
-			var new_restaurant = new restaurant_model({
-				license: req.body.license,
-				phone: req.body.phoneNumber,
-				password: req.body.password
-			});
-			new_restaurant.save(function(err) {
-				if (err) {
-					throw err;
-				}
-				console.log('New restaurant has add');
-				res.send(new_restaurant.license + ' Welcome new restaurant!' + '    ' + new_restaurant.password + '    ' + new_restaurant.phone);
-			});
-		}
-	});
+		});
+	} else {
+		res.send("Please confirme the twice password");
+	}
 });
+
 module.exports = router;
