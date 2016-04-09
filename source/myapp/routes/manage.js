@@ -12,6 +12,8 @@ var models = require('../models/database.js');
 
 var user_model = models.userModel;
 var restaurant_model = models.restaurantModel;
+var setMeal_model = models.setMealModel;
+var dish_model = models.dishModel;
 
 router.get('/', function(req, res) {
 	console.log('resquest login successfully');
@@ -36,25 +38,57 @@ router.get('/get_all_user', function(req, res) {
 	});
 });
 
-router.post('/delete_user', urlencodedParser, function(req, res) {
-	restaurant_model.remove(function(err, user) {
+router.get('/get_all_dish', function(req, res) {
+	dish_model.find(function(err, dishs) {
 		if (err) {
 			throw err;
 		}
-		restaurant_model.findById(req.body.id, function(err, user){
-			res.send('req.body.id = ' + req.body.id + '  successfully delete');
-		});
+		res.json(dishs);
+	});
+});
+
+router.post('/delete_dish', urlencodedParser, function(req, res) {
+	dish_model.findByIdAndRemove(req.body.id, function(err,dish){
+		if (err) {
+			return handleError(err);
+		}
+		res.send("successfully remove dish" + dish._id);
+	});
+});
+
+router.get('/get_all_setMeal', function(req, res) {
+	setMeal_model.find(function(err, setMeals) {
+		if (err) {
+			throw err;
+		}
+		res.json(setMeals);
+	});
+});
+
+router.post('/delete_user', urlencodedParser, function(req, res) {
+	user_model.findByIdAndRemove(req.body.id, function(err,user){
+		if (err) {
+			return handleError(err);
+		}
+		res.send("successfully remove user" + user._id);
+	});
+});
+
+router.post('/delete_setMeal', urlencodedParser, function(req, res) {
+	setMeal_model.findByIdAndRemove(req.body.id, function(err,setMeal){
+		if (err) {
+			return handleError(err);
+		}
+		res.send("successfully remove set meal" + setMeal._id);
 	});
 });
 
 router.post('/delete_restaurant', urlencodedParser, function(req, res) {
-	restaurant_model.remove(function(err, restaurant) {
+	restaurant_model.findByIdAndRemove(req.body.id, function(err,restaurant){
 		if (err) {
-			throw err;
+			return handleError(err);
 		}
-		restaurant_model.findById(req.body.id, function(err, restaurant){
-			res.send('req.body.id = ' + req.body.id + '  successfully delete');
-		});
+		res.send("successfully remove restaurant" + restaurant._id);
 	});
 });
 
