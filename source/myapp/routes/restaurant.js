@@ -5,11 +5,13 @@ var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({
 	extended: false
 });
+var jsonParser = bodyParser.json();
 var models = require('../models/database.js');
 
 var restaurant_model = models.restaurantModel;
 var info_model = models.infoModel;
 var dish_model = models.dishModel;
+var setMeal_model = models.setMealModel;
 
 router.get('/', function(req, res) {
 	var token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -23,7 +25,7 @@ router.get('/', function(req, res) {
 				res.json(restaurant);
 			}
 		});
-	}else{
+	} else {
 		res.send('This token is empty');
 	}
 });
@@ -57,12 +59,7 @@ router.post('/add_info', urlencodedParser, function(req, res) {
 						if (err) {
 							console.log(err);
 						}
-						console.log("name : " + restaurant.information.name);
-						res.json({
-							name: restaurant.information.name,
-							location: restaurant.information.location,
-							tags: restaurant.information.tags
-						});
+						res.json(restaurant.information);
 					});
 			}
 		});
@@ -104,7 +101,7 @@ router.post('/add_dish', function(req, res) {
 				if (sign) {
 					res.send('This dish has already exist');
 				} else {
-					my_dish = new dish_model({
+					var my_dish = new dish_model({
 						dishname: req.body.dishname,
 						dishtype: req.body.dishtype,
 						dishpicture: req.body.dishpicture,
@@ -192,4 +189,119 @@ router.post('/remove_dish', urlencodedParser, function(req, res) {
 		res.send('Token is empty');
 	}
 });
+
+router.post('/add_setMeal', jsonParser, function(req, res) {
+	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+	if (token) {
+		if (!req.body) {
+			res.send("json is empty");
+		} else {
+			restaurant_model.findOne({
+				token: token
+			}, function(err, restaurant) {
+				if (err) {
+					throw err;
+				} else {
+					if (restaurant) {
+						var new_setMeal = new setMeal_model({
+							restaurantID: restaurant._id,
+							price: req.body.price
+						});
+						for (var i = 0; i < req.body.dishs.length; i++) {
+							new_setMeal.dish.push({
+								dishname: req.body.dishs[i].dishname,
+								dishpicture: req.body.dishs[i].dishpicture,
+								dishtype: req.body.dishs[i].dishtype,
+								price: req.body.dishs[i].price
+							});
+							new_setMeal.save(function(err) {
+								if (err) {
+									return handleError(err);
+								}
+							});
+						}
+						restaurant_model.findByIdAndUpdate(restaurant._id, {
+							$push: {
+								setMealID: new_setMeal._id
+							}
+						}, function(err, restaurant) {
+							if (err) {
+								throw err;
+							}
+							res.json(restaurant.setMealID);
+						});
+					} else {
+						res.send("The restaurant is empty");
+					}
+				}
+			});
+		}
+	} else {
+		res.send("The token is empty");
+	}
+});
+
+router.get('/get_setMeal', urlencodedParser, function(req, res) {
+	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+	if (token) {
+		restaurant_model.findOne({
+			token: token
+		}, function(err, restaurant) {
+			if (err) {
+				return handleError(err);
+			} else {
+				if (restaurant) {
+					setMeal_model.find({
+						restaurantID: restaurant._id
+					}, function(err, setMealList) {
+						if (err) {
+							return handleError(err);
+						}
+						res.json(setMealList);
+					});
+				}
+			}
+		});
+	} else {
+		res.send("This token is empty");
+	}
+});
+
+router.post('/remove_setMeal', urlencodedParser, function(req, res) {
+	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+	if (token) {
+		restaurant_model.findOne({
+				token: token
+			},
+			function(err, restaurant) {
+				if (restaurant) {
+					//remove from setMeal 
+					setMeal_model.remove({
+							_id: req.body.id
+						},
+						function(err) {
+							if (err) {
+								throw err;
+							}
+						});
+					//remove from restaurant
+					restaurant_model.findByIdAndUpdate(restaurant._id, {
+						$pull: {
+							setMealID: req.body.id
+						}
+					}, function(err, restaurant) {
+						if (err) {
+							return handleError(err);
+						}
+						res.json(restaurant.setMealID);
+					});
+				} else {
+					return handleError(err);
+				}
+			});
+	} else {
+		res.send("This token is empty");
+	}
+})
+
 module.exports = router;
