@@ -44,11 +44,7 @@ router.post('/add_info', urlencodedParser, function(req, res) {
 					location: req.body.location,
 					tags: req.body.tags
 				});
-				my_info.save(function(err) {
-					if (err) {
-						throw err;
-					}
-				});
+
 				restaurant_model.findByIdAndUpdate(
 					restaurant._id, {
 						$set: {
