@@ -369,7 +369,7 @@ var TagsArePresent = function(RestaurantTags, TagsToFind)
 }
 
 
-router.get('/get_restaurant', urlencodedParser, function(req, res)) {
+router.get('/get_restaurant', urlencodedParser, function(req, res) {
 	var allRestaurant = restaurant_model.find();
 	switch (req.query)
 	{
@@ -377,13 +377,19 @@ router.get('/get_restaurant', urlencodedParser, function(req, res)) {
 			allRestaurant = FindRestaurantByCity(allRestaurant, req.query.city);
 		case(req.query.Name != null) :
 			allRestaurant = FindRestaurantByName(allRestaurant, req.query.Name);
-		case (req.query.tags)
+		case (req.query.tags) :
 			allRestaurant = FindRestaurantByTags(allRestaurant, req.query.tags);
 			break;
 		default : 
 			break;
 	}
+	for (int i = 0; i < allRestaurant.length; i++)
+	{
+		allRestaurant[i].password = "";
+		allRestaurant[i].token = "";
+	}
+
 	res.json(allRestaurant);
-}
+});
 
 module.exports = router;
