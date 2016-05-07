@@ -304,92 +304,93 @@ router.post('/remove_setMeal', urlencodedParser, function(req, res) {
 	}
 })
 
-var FindRestaurantByCity = function(allRestaurant, city)
-{
-	var newRestaurantArray;
-	var i  = 0;
+// var FindRestaurantByCity = function(allRestaurant, city)
+// {
+// 	var newRestaurantArray;
+// 	var i  = 0;
 
-	while (i < allRestaurant.length)
-	{
-		if (allRestaurant[i].information.location == city)
-			newRestaurantArray.push(allRestaurant[i]);
-		i++;
-	}
-	return newRestaurantArray;
-}
+// 	while (i < allRestaurant.length)
+// 	{
+// 		if (allRestaurant[i].information.location == city)
+// 			newRestaurantArray.push(allRestaurant[i]);
+// 		i++;
+// 	}
+// 	return newRestaurantArray;
+// }
 
-var FindRestaurantByName = function(allRestaurant, name)
-{
-	var newRestaurantArray;
-	var i  = 0;
+// var FindRestaurantByName = function(allRestaurant, name)
+// {
+// 	var newRestaurantArray;
+// 	var i  = 0;
 
-	while (i < allRestaurant.length)
-	{
-		if (allRestaurant[i].information.name == name)
-			newRestaurantArray.push(allRestaurant[i]);
-		i++
-	}
-	return newRestaurantArray;
-}
+// 	while (i < allRestaurant.length)
+// 	{
+// 		if (allRestaurant[i].information.name == name)
+// 			newRestaurantArray.push(allRestaurant[i]);
+// 		i++
+// 	}
+// 	return newRestaurantArray;
+// }
 
-var FindRestaurantByTags = function(allRestaurant, tags)
-{
-	var newRestaurantArray;
-	var i  = 0;
+// var FindRestaurantByTags = function(allRestaurant, tags)
+// {
+// 	var newRestaurantArray;
+// 	var i  = 0;
 
-	while (i < allRestaurant.length)
-	{
-		if (TagsArePresent(allRestaurant[i].information.tags, tags))
-			newRestaurantArray.push(allRestaurant[i]);
-		i++;
-	}
-	return newRestaurantArray;
-}
+// 	while (i < allRestaurant.length)
+// 	{
+// 		if (TagsArePresent(allRestaurant[i].information.tags, tags))
+// 			newRestaurantArray.push(allRestaurant[i]);
+// 		i++;
+// 	}
+// 	return newRestaurantArray;
+// }
 
-var TagsArePresent = function(RestaurantTags, TagsToFind)
-{
-	var i = 0;
+// var TagsArePresent = function(RestaurantTags, TagsToFind)
+// {
+// 	var i = 0;
 
-	while (i < TagsToFind.length)
-	{
-		var j = 0;
-		while (j < RestaurantTags.length)
-		{
-			if (RestaurantTags[j] == TagsToFind[i])
-			{
-				i++;
-				break;
-			}
-			if (j == (RestaurantTags.length - 1))
-				return false;
-			j++;
-		}
-	}
-	return true;
-}
+// 	while (i < TagsToFind.length)
+// 	{
+// 		var j = 0;
+// 		while (j < RestaurantTags.length)
+// 		{
+// 			if (RestaurantTags[j] == TagsToFind[i])
+// 			{
+// 				i++;
+// 				break;
+// 			}
+// 			if (j == (RestaurantTags.length - 1))
+// 				return false;
+// 			j++;
+// 		}
+// 	}
+// 	return true;
+// }
 
 
-router.get('/get_restaurant', urlencodedParser, function(req, res) {
-	var allRestaurant = restaurant_model.find();
-	switch (req.query)
-	{
-		case(req.query.city != null) :
-			allRestaurant = FindRestaurantByCity(allRestaurant, req.query.city);
-		case(req.query.Name != null) :
-			allRestaurant = FindRestaurantByName(allRestaurant, req.query.Name);
-		case (req.query.tags) :
-			allRestaurant = FindRestaurantByTags(allRestaurant, req.query.tags);
-			break;
-		default : 
-			break;
-	}
-	for (int i = 0; i < allRestaurant.length; i++)
-	{
-		allRestaurant[i].password = "";
-		allRestaurant[i].token = "";
-	}
+// router.get('/get_restaurant', urlencodedParser, function(req, res) {
+// 	var allRestaurant = restaurant_model.find();
+// 	switch (req.query)
+// 	{
+// 		case(req.query.city != null) :
+// 			allRestaurant = FindRestaurantByCity(allRestaurant, req.query.city);
+// 		case(req.query.Name != null) :
+// 			allRestaurant = FindRestaurantByName(allRestaurant, req.query.Name);
+// 		case (req.query.tags) :
+// 			allRestaurant = FindRestaurantByTags(allRestaurant, req.query.tags);
+// 			break;
+// 		default : 
+// 			break;
+// 	}
+// 	for (var i = 0; i < allRestaurant.length; i++)
+// 	{
+// 		console.log(i);
+// 		allRestaurant[i].password = "";
+// 		allRestaurant[i].token = "";
+// 	}
 
-	res.json(allRestaurant);
-});
+// 	res.json(allRestaurant);
+// });
 
 module.exports = router;
