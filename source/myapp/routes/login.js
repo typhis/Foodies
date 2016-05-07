@@ -61,14 +61,15 @@ router.post('/restaurant_login', urlencodedParser, function(req, res) {
 		} else if (restaurant) {
 			if (req.body.password == restaurant.password) {
 				//sign with default (HMAC SHA256)
+				restaurant.token = "";
 				var token = jwt.sign(restaurant, 'superSecret', {
 					expiresInMinnutes: 200
 				});
-				restaurant_model.findByIdAndUpdate(restaurant._id, {
-					$set: {
-						token: token
-					}
-				}, function(err, restaurant) {
+				console.log(token);
+
+				restaurant_model.findByIdAndUpdate(restaurant._id,
+					{ $set: { "token": token } }, 
+				function(err, restaurant) {
 					if (err) {
 						throw err;
 					}
