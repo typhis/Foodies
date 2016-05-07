@@ -43,7 +43,7 @@ router.post('/user_login', urlencodedParser, function(req, res) {
 						throw err;
 					}
 				});
-				res.send("Welcome " + user.license + '  token' + token);
+				res.send("Welcome " + user.license + ' - token :\n' + token);
 			}
 		}
 	});
@@ -73,7 +73,7 @@ router.post('/restaurant_login', urlencodedParser, function(req, res) {
 						throw err;
 					}
 				});
-				res.send("Welcome " + restaurant.license + '  token' + token);
+				res.send("Welcome " + restaurant.license + ' - token :\n' + token);
 			} else {
 				res.send("Please check your password");
 			}
