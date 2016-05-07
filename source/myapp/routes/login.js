@@ -32,7 +32,7 @@ router.post('/user_login', urlencodedParser, function(req, res) {
 			} else if (user.password == req.body.password) {
 				//sign with default (HMAC SHA256)
 				var token = jwt.sign(user, 'superSecret', {
-					expiresInMinnutes: 2
+					expiresInMinnutes: 200
 				});
 				user_model.findByIdAndUpdate(user._id, {
 					$set: {
@@ -62,7 +62,7 @@ router.post('/restaurant_login', urlencodedParser, function(req, res) {
 			if (req.body.password == restaurant.password) {
 				//sign with default (HMAC SHA256)
 				var token = jwt.sign(restaurant, 'superSecret', {
-					expiresInMinnutes: 2
+					expiresInMinnutes: 200
 				});
 				restaurant_model.findByIdAndUpdate(restaurant._id, {
 					$set: {
