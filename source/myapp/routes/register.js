@@ -49,11 +49,11 @@ router.post('/restaurant_register', urlencodedParser, function(req, res) {
 	if (req.body.password == req.body.re_password) {
 		restaurant_model.findOne({
 			license: req.body.license
-		}, function(err, restaurant) {
+		}, function(err, license) {
 			if (err) {
 				res.send(err);
 			} else {
-				if (user) {
+				if (license) {
 					res.send('Please try another number of license, this license has registered already');
 				} else {
 					var encryptedPassword = encrypt.cryptPassword(req.body.password, function(err, salt) {
